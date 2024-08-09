@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
     import signup from '../components/Signup.vue';
 
 </script>
