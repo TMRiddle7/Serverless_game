@@ -1,47 +1,56 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import {ref, computed} from 'vue';
+import { RouterLink, RouterView, useRoute ,useRouter} from 'vue-router'
+import { isLoggedIn } from '../src/auth/auth.js';
+
+const route = useRoute();
+
+const hideButtonsRoutes = ['/signup', '/another-route', '/yet-another-route']
+
+const isSpecialRoute = computed(() => hideButtonsRoutes.includes(route.path))
+console.log(isLoggedIn.value)
+const router = useRouter();
+    const goBack = () => router.back();
+    const goHome = () => router.push('/home');
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div id="app" >
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-2 mb-2">
+    <div class="container-fluid">
+      <p class="text-white mt-auto" v-if="isLoggedIn.value" >Online</p>
+      <span class="navbar-brand ms-auto ">Your Brand</span>
+      <div class="d-flex">
+        <RouterLink v-if="isSpecialRoute" class="" to="/home"><img class="llimg" src="/logo.png.jpg" alt="AskMe" width="128" height="72"></RouterLink>
+      </div>
+      
     </div>
-  </header>
+  </nav>
 
-  <main>
-    <TheWelcome />
-  </main>
+    <div v-show="!isSpecialRoute" class="container">
+      <header class="header">
+        <img src="/logo.png.jpg" alt="AskMe" width="384" height="216">
+      </header>
+    <div class="container">
+      <div class=" d-grid gap-2  col-6 mx-auto">
+        <RouterLink to="/home" class="mx-auto"><button class="btn btn-outline-dark">Home</button></RouterLink>
+        <RouterLink to="/signup" class="mx-auto"><button class="btn btn-outline-dark">SignUP</button></RouterLink>
+       </div>
+    </div>
+  </div>
+
+  <div v-if="isSpecialRoute" class="container">
+    <RouterView />
+  </div>
+  <footer class="footer mt-auto" v-if="isSpecialRoute" >
+                <div class="footer-buttons">
+                  <button class="btn btn-outlint-dark" @click="goBack">Back</button>
+                  <button class="btn btn-outlint-dark" @click="goHome">Home</button>
+                </div>
+  </footer>
+
+
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
